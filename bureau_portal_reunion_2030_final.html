@@ -1,0 +1,210 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>The Bureau Portal — Reunion 2030</title>
+<style>
+  :root{{--bg:#080808;--muted:#bfbfbf;--accent:#8B0000;--panel:#0f0f10;--glass: rgba(255,255,255,0.03);font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;}}
+  html,body{{height:100%;margin:0;background:linear-gradient(180deg,#050505 0%, #0b0b0b 60%);color:var(--muted)}}
+  .wrap{{min-height:100%;display:flex;align-items:center;justify-content:center;padding:40px;}}
+  .card{{width:980px;max-width:98%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 30px rgba(0,0,0,0.7);border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 420px;}}
+  .left{{padding:36px 42px;}}
+  .right{{background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.10));padding:28px;border-left:1px solid rgba(255,255,255,0.02);}}
+  h1{{margin:0;font-size:22px;letter-spacing:2px;color:#eee}}
+  .sub{{margin-top:6px;color:#cfcfcf;font-size:13px}}
+  .watermark{{position:absolute;opacity:0.03;font-size:60px;font-weight:700;transform:rotate(-12deg);left:30px;top:20px;pointer-events:none}}
+  .login{{margin-top:28px}}
+  label{{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}}
+  input[type="text"], input[type="password"]{{width:100%;padding:12px 14px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);border-radius:6px;color:#fff;outline:none;font-size:14px}}
+  .btn{{display:inline-block;padding:10px 14px;border-radius:6px;background:var(--accent);color:#fff;border:none;cursor:pointer;margin-top:12px;font-weight:600;box-shadow:0 6px 18px rgba(139,0,0,0.12)}}
+  .small{{font-size:12px;color:#9a9a9a;margin-top:8px}}
+  .terminal{{background:#020202;border-radius:6px;padding:14px;margin-top:18px;font-family:monospace;color:#9fd8ff;font-size:13px;min-height:74px}}
+  .qrbox{{display:flex;flex-direction:column;align-items:center;gap:12px}}
+  .qr{{width:220px;height:220px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center}}
+  .footer{{margin-top:18px;font-size:12px;color:#8f8f8f}}
+  .rsvp-form{{display:none;margin-top:10px}}
+  .field{{margin-bottom:10px}}
+  textarea{{width:100%;min-height:64px;padding:10px;border-radius:6px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#fff;resize:vertical}}
+  .success{{background:linear-gradient(90deg,#052b08,#083a0b);padding:12px;border-radius:6px;color:#bfe6c1;border:1px solid rgba(255,255,255,0.03);margin-top:10px}}
+  .print-btn{{margin-top:10px;padding:8px 12px;border-radius:6px;background:#222;border:1px solid rgba(255,255,255,0.04);color:var(--muted);cursor:pointer}}
+  .hidden{{display:none}}
+  .topgap{{height:6px}}
+  .redacted{{background:#111;color:#111;padding:0 6px;border-radius:3px}}
+  .case-ref{{font-family:monospace;color:#ffd8d8;margin-top:8px}}
+  @media (max-width:880px){{.card{{grid-template-columns:1fr;}}.right{{border-left:none;border-top:1px solid rgba(255,255,255,0.02)}}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="left">
+      <div class="watermark">CLASSIFIED</div>
+      <h1 id="title">THE BUREAU PORTAL</h1>
+      <div class="sub">Classified Access Point — Reunion 2030</div>
+      <div class="topgap"></div>
+
+      <div class="login" id="loginBox" aria-live="polite">
+        <label for="agentCode">AGENT CODE</label>
+        <input id="agentCode" type="text" placeholder="e.g., AGENT-CLASSMATE-2030" autocomplete="off">
+        <label for="clearPhrase" style="margin-top:12px">CLEARANCE PHRASE (optional)</label>
+        <input id="clearPhrase" type="password" placeholder="Your secret phrase">
+        <button id="enterBtn" class="btn" aria-label="Enter the portal">ENTER</button>
+
+        <div class="small">Don't have a code? Try your school initials + 2030. Contact R.R. via the printed invite for special clearance.</div>
+
+        <div class="terminal" id="terminal">[ SYSTEM READY ]</div>
+      </div>
+
+      <div class="rsvp-form" id="rsvpForm" aria-live="polite">
+        <h2 style="margin:0;font-size:18px;color:#fff">ACCESS GRANTED</h2>
+        <div class="sub">Welcome back, Agent <span id="agentNameDisplay"></span>.</div>
+
+        <div class="case-ref" id="caseRef">CASE REFERENCE: —</div>
+
+        <div style="margin-top:12px">
+          <label class="field">Will you accept the mission?</label>
+          <select id="attendance" name="entry.111111111" style="padding:10px;border-radius:6px;background:var(--glass);color:#fff;border:1px solid rgba(255,255,255,0.03)">
+            <option value="Yes">MISSION ACCEPTED — I will attend</option>
+            <option value="No">OPERATION DENIED — I cannot attend</option>
+            <option value="Maybe">CLASSIFIED — I will confirm later</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Dietary notes / Allergies</label>
+          <input id="diet" name="entry.222222222" type="text" placeholder="e.g., Vegetarian, Halal, No peanuts">
+        </div>
+
+        <div class="field">
+          <label>Recent Intel (upload a current photo) — optional</label>
+          <input id="photo" type="file" accept="image/*">
+        </div>
+
+        <div class="field">
+          <label>Recon Note (what's new since graduation?)</label>
+          <textarea id="note" name="entry.333333333" placeholder="Brief mission report..."></textarea>
+        </div>
+
+        <button id="submitRsvp" class="btn">SUBMIT RSVP</button>
+        <button id="printCase" class="print-btn">PRINT YOUR CASE FILE</button>
+
+        <div id="rsvpSuccess" class="success hidden" role="status">
+          Your RSVP has been recorded. A personalized case file will be ready for you at check-in.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="right" aria-hidden="false">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#eee">FIELD OPERATIONS</div>
+          <div class="sub">CVO-Skool Potgietersrus — Reunion Brief</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:#c9c9c9">Event Date:</div>
+          <div style="font-weight:700;color:#fff">30 June 2030</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div style="font-size:13px;color:#d3d3d3">LOCATION</div>
+        <div style="font-weight:700;color:#fff">CVO-Skool Potgietersrus</div>
+
+        <div style="margin-top:12px;font-size:13px;color:#d3d3d3">RSVP DEADLINE</div>
+        <div style="font-weight:700;color:#fff">20 January 2030</div>
+
+        <div style="margin-top:12px;font-size:13px;color:#d3d3d3">DRESS CODE</div>
+        <div style="font-weight:700;color:#fff">FBI Chic — black, elegant, slightly dangerous</div>
+      </div>
+
+      <div style="margin-top:18px" class="qrbox" aria-hidden="false">
+        <div class="qr" id="qrPreview" title="QR code placeholder">
+          <!-- QR will render here -->
+        </div>
+        <div style="font-size:12px;color:#9f9f9f">Scan the printed invite or visit the portal. When you host this file, the QR below will point to the live page automatically.</div>
+      </div>
+
+      <div class="footer">
+        <div style="margin-top:14px">Need assistance? Contact: <strong>R.R. — Concierge</strong></div>
+        <div style="margin-top:8px;font-size:12px;color:#888">This is a themed experience. No actual intelligence agencies are involved.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QRCode.js (minimal) -->
+<script>
+(function(){function qrcode(text,cellSize,el){cellSize=cellSize||4;var canvas=document.createElement('canvas');var ctx=canvas.getContext('2d');canvas.width=cellSize*40;canvas.height=cellSize*40;ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.font=(12*cellSize/4)+'px monospace';wrapText(ctx,text,10,20,canvas.width-20,14*cellSize/4);el.appendChild(canvas);}function wrapText(ctx,text,x,y,maxWidth,lineHeight){var words=text.split(' '),line='';for(var n=0;n<words.length;n++){var testLine=line+words[n]+' ';var metrics=ctx.measureText(testLine);var testWidth=metrics.width;if(testWidth>maxWidth && n>0){ctx.fillText(line,x,y);line=words[n]+' ';y+=lineHeight;}else{line=testLine;}}ctx.fillText(line,x,y);}window.simpleQR=qrcode;}());
+</script>
+
+<script>
+(function(){
+  const enterBtn = document.getElementById('enterBtn');
+  const agentCode = document.getElementById('agentCode');
+  const terminal = document.getElementById('terminal');
+  const rsvpForm = document.getElementById('rsvpForm');
+  const agentNameDisplay = document.getElementById('agentNameDisplay');
+  const caseRef = document.getElementById('caseRef');
+  const submitRsvp = document.getElementById('submitRsvp');
+  const rsvpSuccess = document.getElementById('rsvpSuccess');
+  const printCase = document.getElementById('printCase');
+  const qrPreview = document.getElementById('qrPreview');
+
+  const portalURL = window.location.href; // will point to hosted page once uploaded
+  try{{ simpleQR(portalURL,4,qrPreview);}catch(e){{qrPreview.textContent = portalURL;}}
+
+  function typeTerminal(lines, cb){ terminal.innerHTML = ''; let i=0; function next(){ if(i<lines.length){ const p = document.createElement('div'); p.textContent = lines[i++]; terminal.appendChild(p); setTimeout(next, 300); } else { if(cb) cb(); } } next(); }
+
+  enterBtn.addEventListener('click', function(){ const code = agentCode.value.trim(); if(!code){ typeTerminal(["[ ERROR ] No agent code entered.","[ TIP ] Try: AGENT-[YOURNAME]-2030"]); return; } typeTerminal(["[ VERIFYING CODE ]","[ CHECKSUM OK ]","[ LOOKING UP RECORDS ]"], function(){ let name = code.replace(/AGENT[-_]?/i,'').replace(/[-_]?2030/i,'').replace(/[-_]/g,' ').trim(); if(!name) name = "UNKNOWN"; agentNameDisplay.textContent = name; const ref = "AGENT-" + (name.replace(/\s+/g,'').toUpperCase()).substr(0,12) + "-" + (Math.floor(Math.random()*9000)+1000); caseRef.textContent = ref; document.getElementById('loginBox').style.display='none'; rsvpForm.style.display='block'; terminal.innerHTML = "[ ACCESS GRANTED ]<br>[ WELCOME BACK, AGENT " + name.toUpperCase() + " ]"; }); });
+
+  submitRsvp.addEventListener('click', function(){ const attendance = document.getElementById('attendance').value; const diet = document.getElementById('diet').value; const note = document.getElementById('note').value; const agentName = document.getElementById('agentNameDisplay').textContent || 'UNKNOWN';
+
+    // Build a form POST to Google Forms using the provided formResponse URL.
+    const formAction = "https://docs.google.com/forms/d/e/1FAIpQLSeX7ilqYl5B7cwVqy6WmVuEI5rGq5CF8B1U9jnf1pGpo09AbA/formResponse";
+    const payload = new FormData();
+    // These entry keys are placeholders. Replace with real entry IDs from your Google Form.
+    payload.append('entry.111111111', attendance);
+    payload.append('entry.222222222', diet);
+    payload.append('entry.333333333', note);
+    payload.append('entry.444444444', agentName);
+    fetch(formAction, {{ method: 'POST', mode: 'no-cors', body: payload }})
+      .then(()=>{ rsvpSuccess.classList.remove('hidden'); })
+      .catch(()=>{ rsvpSuccess.classList.remove('hidden'); });
+
+    const tmpl = document.getElementById('caseTemplate');
+    const clone = tmpl.content.cloneNode(true);
+    clone.getElementById('cfName').textContent = agentName;
+    clone.getElementById('cfRef').textContent = caseRef.textContent;
+    clone.getElementById('cfAlias').textContent = (localStorage.getItem('alias') || 'Classmate');
+    clone.getElementById('cfBrief').textContent = (note || "No reconnaissance received prior to check-in.");
+    window._casePrintContent = clone;
+  });
+
+  printCase.addEventListener('click', function(){ const content = window._casePrintContent; if(!content){ alert("Please submit your RSVP first."); return; } const w = window.open('', '_blank'); const doc = w.document; doc.open(); doc.write('<!doctype html><html><head><meta charset="utf-8"><title>Case File</title>'); doc.write('<style>body{font-family:Georgia, "Times New Roman", serif;padding:28px;color:#111} h2{margin-top:0}</style>'); doc.write('</head><body>'); doc.write(content.innerHTML || ''); doc.write('<p style="margin-top:18px;font-size:12px;color:#666">Operation: Reunion Classified — Class of 2030</p>'); doc.write('</body></html>'); doc.close(); w.print(); });
+
+  agentCode.addEventListener('keydown', function(e){ if(e.key === 'Enter') enterBtn.click(); });
+
+})();
+</script>
+
+<!-- Case file template -->
+<template id="caseTemplate">
+  <section style="font-family:Georgia, 'Times New Roman', serif;color:#111;padding:18px;">
+    <h2 style="margin:0">OPERATION: REUNION CLASSIFIED</h2>
+    <div style="margin-top:6px;font-size:13px">CASE FILE — AGENT <span id="cfName"></span></div>
+    <div style="margin-top:10px;font-size:12px">
+      <strong>CASE REF:</strong> <span id="cfRef" style="font-family:monospace"></span><br>
+      <strong>ALIAS:</strong> <span id="cfAlias"></span><br>
+      <strong>STATUS:</strong> Active — Awaiting Debrief<br>
+    </div>
+    <hr style="margin-top:12px;margin-bottom:12px">
+    <div><strong>BRIEF:</strong></div>
+    <div id="cfBrief" style="margin-top:6px">[Recovered memories and mission notes will be added at check-in]</div>
+  </section>
+</template>
+
+</body>
+</html>
